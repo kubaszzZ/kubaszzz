@@ -54,6 +54,7 @@ void change_personpass()
 	int n=0;
 	puts("1.学生");
 	puts("2.老师");
+	puts("3.校长");
 	printf("请选择你的身份:");
 	scanf("%d",&n);
 	if(1==n)
@@ -91,6 +92,14 @@ void change_personpass()
 				break;
 			}
 		}
+	}
+	if(3==n)
+	{
+		char new_pass[10]={};
+		printf("请校长输入你要修改的新密码:");
+		scanf("%s",new_pass);
+		strcpy(leader_password,new_pass);
+		puts("密码修改成功");
 	}
 }
 
