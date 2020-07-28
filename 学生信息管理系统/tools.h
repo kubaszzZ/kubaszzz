@@ -1,5 +1,30 @@
 #ifndef TOOLS_H
 #define TOOLS_H
+#define M 100
+
+
+
+struct Student
+{
+    char stu_name[20];
+    int stu_sex;
+    int stu_id;
+    char stu_password[10];
+    short chinese_score;
+    short math_score;
+    short english_score;
+};
+
+
+struct Teacher
+{
+	char tea_name[20];
+	int sex_tea;
+	int tea_id;
+	char tea_password[10];
+};
+
+char leader_password[10];
 
 //强制修改密码
 void strong_change();
@@ -8,8 +33,7 @@ void strong_change();
 void change_personpass();
 
 //产生随机学号（1000-9999）
-void srand_num();
+int srand_num();
 
-//显示输入帐号密码的界面
-char menu();
+
 #endif// TOOLS_H
