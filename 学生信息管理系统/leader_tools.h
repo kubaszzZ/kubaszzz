@@ -1,6 +1,6 @@
 #ifndef LEADER_TOOLS_H
 #define LEADER_TOOLS_H
-#define MAX 100
+
 // 显示校长菜单
 char leader_menu();
 
@@ -20,5 +20,5 @@ void show_onlineteacher();
 //显示离职教师
 void show_dieteacher();
 
-
+void save_data();
 #endif// LEADER_TOOLS_H

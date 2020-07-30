@@ -1,25 +1,21 @@
 #include<stdio.h>
-#include<getch.h>
 #include"tools.h"
 #include"teacher_tools.h"
 #include"stu_tools.h"
 #include"leader_tools.h"
 int main()
 {
+    int n=0;
 	
-	int n=0;
+		
+		puts("请选择登陆的身份：");
+		puts("1.student");
+		puts("2.teacher");
+		puts("3.leader");
+		printf("请输入：");
+		scanf("%d",&n);
 	while(1)
 	{
-		if(!n)
-		{
-			puts("请选择登陆的身份：");
-			puts("1.student");
-			puts("2.teacher");
-			puts("3.leader");
-			printf("请输入：");
-		
-			scanf("%d",&n);
-		}
 		if(1==n)
 		{
 			
@@ -32,8 +28,6 @@ int main()
 		}
 		else if(2==n)
 		{
-			
-			
 			switch(tea_menu())
 			{
 				case 1:add_stu();break;
@@ -43,15 +37,8 @@ int main()
 				case 5:import_score();break;
 				case 6:reset_stupassword();break;
 				case 7:show_allstu();break;
-				
-				case 9:
-					printf("已锁定，请联系校长解锁");
-					fflush(stdout);
-					usleep(1000000);
-					n=0;
-					break;
+				case 8:save_data();break;
 			}
-			save_studata();
 		}
 		else if(3==n)
 		{
@@ -63,12 +50,7 @@ int main()
 				case 4:del_tea();break;
 				case 5:show_onlineteacher();break;
 				case 6:show_dieteacher();break;
-				case 7:n=0;save_data();break;
 			}
-		}
-		else if(4==n)
-		{
-			return 0;
 		}
 		
 	}

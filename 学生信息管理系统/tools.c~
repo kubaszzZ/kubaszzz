@@ -4,8 +4,9 @@
 #include<string.h>
 #include"tools.h"
 
-struct Student stu[100];
-struct Teacher tea[100];
+int student_count=0;
+struct Student stu[Max];
+struct Teacher tea[Max];
 
 //强制修改密码
 void strong_change()
@@ -17,7 +18,7 @@ void strong_change()
 	scanf("%d",&n);
 	if(1==n)
 	{	
-		char names[20]={};
+		char names[20];
 		printf("请输入要修改密码的姓名:");
 		scanf("%s",names);
 		for(int i=0;;i++)
@@ -32,7 +33,7 @@ void strong_change()
 	}
 	if(2==n)
 	{
-		char names[20]={};
+		char names[20];
 		printf("请输入要修改密码的姓名:");
 		scanf("%s",names);
 		for(int i=0;;i++)
@@ -49,7 +50,7 @@ void strong_change()
 }
 
 //修改自己的密码
-void change_personpass()
+void change_personpass(void)
 {
 	int n=0;
 	puts("1.学生");
@@ -59,14 +60,14 @@ void change_personpass()
 	scanf("%d",&n);
 	if(1==n)
 	{	
-		char names[20]={};
+		char names[20];
 		printf("请输入要修改密码的姓名:");
 		scanf("%s",names);
 		for(int i=0;;i++)
 		{
 			if(	strcmp(stu[i].stu_name,names)==0 && stu[i].stu_sex!=0)
 			{
-				char mima[10]={};
+				char mima[10];
 				printf("请输入新密码:");
 				scanf("%s",mima);
 				strcpy(stu[i].stu_password,mima);
@@ -77,14 +78,14 @@ void change_personpass()
 	}
 	if(2==n)
 	{
-		char names[20]={};
+		char names[20];
 		printf("请输入要修改密码的姓名:");
 		scanf("%s",names);
 		for(int i=0;;i++)
 		{
 			if(strcmp(tea[i].tea_name,names)==0 && tea[i].sex_tea!=0)
 			{
-				char mima[10]={};
+				char mima[10];
 				printf("请输入新密码:");
 				scanf("%s",mima);
 				strcpy(tea[i].tea_password,mima);
@@ -95,7 +96,7 @@ void change_personpass()
 	}
 	if(3==n)
 	{
-		char new_pass[10]={};
+		char new_pass[10];
 		printf("请校长输入你要修改的新密码:");
 		scanf("%s",new_pass);
 		strcpy(leader_password,new_pass);
@@ -104,7 +105,7 @@ void change_personpass()
 }
 
 //产生随机学号（1000-9999）
-int srand_num()
+int srand_num(void)
 {
 	srand(time(NULL));
 	return rand()%9000+1000;
