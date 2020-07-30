@@ -4,8 +4,8 @@
 #include<string.h>
 #include"tools.h"
 
-struct Student stu[100];
-struct Teacher tea[100];
+struct Student stu[M];
+struct Teacher tea[M];
 
 //强制修改密码
 void strong_change()

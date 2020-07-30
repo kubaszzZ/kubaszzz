@@ -19,7 +19,6 @@ void del_stu()
 //查找学生信息
 void find_stu()
 {
-	
 }
 
 //修改学生信息

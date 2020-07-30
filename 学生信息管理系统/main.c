@@ -6,16 +6,18 @@
 #include"leader_tools.h"
 int main()
 {
+	int n=0;
 	for(;;)
 	{
-		int n=0;
-		puts("请选择登陆的身份：");
-		puts("1.student");
-		puts("2.teacher");
-		puts("3.leader");
-		printf("请输入：");
-		scanf("%d",&n);
-		menu();
+		if(0==n)
+		{
+			puts("请选择登陆的身份：");
+			puts("1.student");
+			puts("2.teacher");
+			puts("3.leader");
+			printf("请输入：");
+			scanf("%d",&n);
+		}
 		if(1==n)
 		{
 			
@@ -24,6 +26,7 @@ int main()
 				case 1:find_score();break;
 				case 2:change_personpass();break;
 				case 3:watch_person();break;
+				case 4: n=0;break;
 			}
 		}
 		else if(2==n)
@@ -37,6 +40,7 @@ int main()
 				case 5:import_score();break;
 				case 6:reset_stupassword();break;
 				case 7:show_allstu();break;
+				case 8: n=0;break;
 			}
 		}
 		else if(3==n)
@@ -49,6 +53,7 @@ int main()
 				case 4:del_tea();break;
 				case 5:show_onlineteacher();break;
 				case 6:show_dieteacher();break;
+				case 7: n=0;break;
 			}
 		}
 		
