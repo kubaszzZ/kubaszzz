@@ -1,5 +1,4 @@
 #include<stdio.h>
-#include<getch.h>
 #include"tools.h"
 #include"teacher_tools.h"
 #include"stu_tools.h"
@@ -43,7 +42,7 @@ int main()
 				case 5:import_score();break;
 				case 6:reset_stupassword();break;
 				case 7:show_allstu();break;
-				
+				case 8:n=0;save_studata();break;
 				case 9:
 					printf("已锁定，请联系校长解锁");
 					fflush(stdout);
@@ -51,7 +50,7 @@ int main()
 					n=0;
 					break;
 			}
-			save_studata();
+			
 		}
 		else if(3==n)
 		{
@@ -69,7 +68,6 @@ int main()
 		else if(4==n)
 		{
 			return 0;
-		}
-		
+		}	
 	}
 }

@@ -1,17 +1,29 @@
 #include "teacher_tools.h"
 #include "tools.h"
 
+void open_data()
+{
+	FILE* fp = fopen("student.txt","a+");
+	fclose(fp);
+	fp = fopen("student.txt","r+");
+	student_count=0;
+	for(int i=0;;i++)
+	{
+		fscanf(fp,"%s %d %d %s %hd %hd %hd %hhd",stu[i].stu_name,&stu[i].stu_sex,&stu[i].stu_id,stu[i].stu_password,&stu[i].chinese_score,&stu[i].math_score,&stu[i].english_score,&stu[i].stu_error);
+		if(stu[i].stu_sex==0) break;
+		else student_count++;
+	}
+	fclose(fp);
+}
 //显示教师菜单
 char tea_menu(void)
 {
-	
 	FILE* fpx = fopen("OLteacher.txt","r+");
 	for(int t=0;t<100;t++)
 	{
-		fscanf(fpx,"%s %d %d %s", tea[t].tea_name, &tea[t].tea_sex, &tea[t].tea_id,tea	[t].tea_password);
+		/*if(0==t||(t>0&&tea[t-1].tea_sex>0))*/fscanf(fpx,"%s %d %d %s %hhd", tea[t].tea_name,&tea[t].tea_sex,&tea[t].tea_id,tea[t].tea_password,&tea[t].tea_error);
 	}
-
-	
+	fclose(fpx);
 	int i=0;
 	char names[20];
 	char key[13];
@@ -23,45 +35,54 @@ char tea_menu(void)
 		{
 			printf("用户名不存在,请重新输入:");
 			memset(names,0,sizeof(names));
-			gets(names);
+			scanf("%s",names);
 			i=-1;
 		}
 		else if(0==strcmp(names,tea[i].tea_name))
 		{
+			if(tea[i].tea_error==4)
+			{
+				return 9;
+			}
 			break;
 		}
 		i++;
 	}
-	if(tea[i].tea_error==4)
-	{
-		return 9;
-	}
-
+	
 	printf("请输入密码：");
 	scanf("%s",key);
-
 	while(0!=strcmp(key,tea[i].tea_password))
 	{
-	
+		if(tea[i].tea_error==4) 
+		{
+			fpx=fopen("OLteacher.txt","w+");
+			for(int t=0;t<100;t++)
+			{
+				if(tea[t].tea_sex)fprintf(fpx,"%s %d %d %s %hhd\n",tea[t].tea_name,tea[t].tea_sex,tea[t].tea_id,tea[t].tea_password,tea[t].tea_error);
+			}
+			fclose(fpx);
+			return 9;
+		}
 		tea[i].tea_error ++;
-		printf("\n密码错误,请重试:");
+		printf("\n密码错误,请重试%hhd:",tea[i].tea_error);
 		memset(key,0,sizeof(key));
 		scanf("%s",key);	
-		if(tea[i].tea_error==4) return 9;
+		
 	}
-	
 	if(tea[i].tea_error==0)
 	{
 		printf("初次登录请重置密码:");
 		scanf("%s",tea[i].tea_password);
 		tea[i].tea_error ++;
 	}
-	rewind(fpx);
+	
+	fpx=fopen("OLteacher.txt","w+");
 	for(int t=0;t<100;t++)
 	{
-		if(tea[i].tea_sex)fprintf(fpx,"%s %d %d %s %hhd\n",tea[t].tea_name,tea[t].tea_sex,tea[t].tea_id,tea[t].tea_password,tea[i],tea[i].tea_error);
+		if(tea[i].tea_sex)fprintf(fpx,"%s %d %d %s %hhd\n",tea[t].tea_name,tea[t].tea_sex,tea[t].tea_id,tea[t].tea_password,tea[i].tea_error);
 	}
 	fclose(fpx);
+	
 	system("clear");
 	puts("┏━━━━━━━━━━━━━━━━━━━━━━━━┓");
 	puts("┃欢迎使用学生信息管理系统┃");
@@ -78,34 +99,26 @@ char tea_menu(void)
 	printf("请输入指令：");
 	char cmd;
 	scanf("%hhd",&cmd);
-
 	return cmd;
 }
 //添加学生
 void add_stu()
 {
-	FILE* fp = fopen("student.txt","a+");
-	fscanf(fp,"%d",&student_count);
-	for(int i=0;i<=100;i++)
-	{
-		fscanf(fp,"%s %d %d %s|%hd %hd %hd %hhd",stu[i].stu_name,&stu[i].stu_sex,&stu[i].stu_id,stu[i].stu_password,&stu[i].chinese_score,&stu[i].math_score,&stu[i].english_score,&stu[i].stu_error);
-	}
-	
-
 
 	if(student_count>=100)
 	{
-		printf("we need more space！");
+		printf("We need more space！");
 		fflush(stdout);
 		usleep(3333333);
 		return ;
 	}
+	
 	char fla=0;
 	int i=0,j=0,num;
 	printf("是否批量操作?(y/n)");
 	fflush(stdin);
 	scanf(" %c",&fla);
-	
+
 	if('y'==fla) 
 	{
 		printf("请输入人数：");
@@ -118,12 +131,14 @@ void add_stu()
 		while(stu[i].stu_sex) i++;
 		printf("\n请输入新增学生的姓名和性别");
 		scanf("%s %d",stu[i].stu_name,&stu[i].stu_sex);
-		stu[i].stu_id=srand_num();
+		
 		stu[i].stu_error=0;
-		sprintf(stu[i].stu_password,"123456");
-		for(j=0;j<=student_count;j++)
+		strcpy(stu[i].stu_password,"123456");
+		
+		stu[i].stu_id=srand_num();
+		for(j=0;j<i;j++)
 		{
-			if(j!=i && stu[i].stu_id==stu[j].stu_id)
+			if(stu[i].stu_id==stu[j].stu_id)
 			{
 				stu[i].stu_id =srand_num();
 				j=-1;
@@ -131,35 +146,75 @@ void add_stu()
 		}
 		student_count++;
 	}
+	
+	/*fp = fopen("student.txt","r+");
+	fseek(fp,0,0);
+	for(int i=0;i<student_count;i++)
+	{
+		fprintf(fp,"%s %d %d %s %hd %hd %hd %hhd\n",stu[i].stu_name,stu[i].stu_sex,stu[i].stu_id,stu[i].stu_password,stu[i].chinese_score,stu[i].math_score,stu[i].english_score,stu[i].stu_error);
+	}
+	fclose(fp);*/
 	return ;
 }
 //删除学生
 void del_stu()
 {
+	/*FILE* fp = fopen("student.txt","r+");
+	student_count=0;
+	for(int i=0;;i++)
+	{
+		
+		fscanf(fp,"%s %d %d %s %hd %hd %hd %hhd",stu[i].stu_name,&stu[i].stu_sex,&stu[i].stu_id,stu[i].stu_password,&stu[i].chinese_score,&stu[i].math_score,&stu[i].english_score,&stu[i].stu_error);
+		if(stu[i].stu_sex==0) break;
+		else student_count++;
+	}
+	fclose(fp);*/
+	
+	FILE* fdel = fopen("overlord.txt","a");
 	
     int i;
 	char names[20];
 	printf("请输入学生姓名或学号：");
-	scanf("%s",names);
+	scanf("%s",names);	
 	for(i=0;i<student_count;i++)
 	{
-		if(stu[i].stu_sex>0&&(0==strcmp(names,stu[i].stu_name)||stu[i].stu_id==atoi(names)))
-		{
-			stu[i].stu_sex=0;
-			printf("%s已删除",stu[i].stu_name);
-			student_count--;
-		}
-		if(i==student_count-1&&(0!=strcmp(names,stu[i].stu_name)||stu[i].stu_id!=atoi(names)))
+		if(student_count-1==i && (0!=strcmp(names,stu[i].stu_name)||stu[i].stu_id!=atoi(names)) )
 		{
 			printf("未能找到相关学生信息\n");
 		}
+		else if(0<stu[i].stu_sex && (0==strcmp(names,stu[i].stu_name)||stu[i].stu_id==atoi(names)) )
+		{
+			fprintf(fdel,"%s\n",stu[i].stu_name);
+			stu[i].stu_sex=0;
+			printf("%s已删除",stu[i].stu_name);
+			fflush(stdout);
+			break;
+		}
 	}
+	fclose(fdel);
 	
-	return ;
+/*	fopen("student.txt","w");
+	for(i=0;i<student_count;i++)
+	{
+		if(stu[i].stu_sex==0) continue;
+	 	if(stu[i].stu_sex>0) fprintf(fp,"%s %d %d %s %hd %hd %hd %hhd\n",stu[i].stu_name,stu[i].stu_sex,stu[i].stu_id,stu[i].stu_password,stu[i].chinese_score,stu[i].math_score,stu[i].english_score,stu[i].stu_error);
+		
+	}
+	fclose(fp);*/
+	
+	return ;    
 }
-//查找学生信息
+//查找在校学生信息
 void find_stu()
 {
+/*	FILE* fp = fopen("student.txt","r");
+	fscanf(fp,"%d",&student_count);
+	for(int i=0;i<student_count;i++)
+	{
+		fscanf(fp,"%s %d %d %s %hd %hd %hd %hhd",stu[i].stu_name,&stu[i].stu_sex,&stu[i].stu_id,stu[i].stu_password,&stu[i].chinese_score,&stu[i].math_score,&stu[i].english_score,&stu[i].stu_error);
+	}
+	fclose(fp);*/
+	
 	int i,flag=1;
 	char names[20];
 	printf("请输入要查找的学生姓名或学号：");
@@ -170,17 +225,26 @@ void find_stu()
 		{
 			flag=0;
 			printf("姓名：%s ",stu[i].stu_name);
-			if(1==stu[i].stu_sex) printf("性别：男\n");
-			else if(2==stu[i].stu_sex) printf("性别：女\n");
+			if(1==stu[i].stu_sex) printf("性别：男 \n");
+			else if(2==stu[i].stu_sex) printf("性别：女 \n");
 			printf("学号：%08d\n",stu[i].stu_id);
 		}
 	}
 	if(flag) printf("未能找到相关学生信息\n");
+	return ;
 }
 //修改学生信息
 void change_inf()
 {
 	int i;
+	
+/*	FILE* fp = fopen("student.txt","r+");
+	fscanf(fp,"%d",&student_count);
+	for(i=0;i<student_count;i++)
+	{
+		fscanf(fp,"%s %d %d %s %hd %hd %hd %hhd",stu[i].stu_name,&stu[i].stu_sex,&stu[i].stu_id,stu[i].stu_password,&stu[i].chinese_score,&stu[i].math_score,&stu[i].english_score,&stu[i].stu_error);
+	}*/
+	
 	char j=0,names[20];
 	printf("请输入需要修改信息的学生姓名：");
 	scanf("%s",names);
@@ -218,12 +282,25 @@ void change_inf()
 		}
 	}
 	printf("未能找到相关学生信息\n");
+	/*rewind(fp);
+	fprintf(fp,"%d\n",student_count);
+	for(int i=0;i<student_count;i++)
+	{
+		fprintf(fp,"%s %d %d %s %hd %hd %hd %hhd\n",stu[i].stu_name,stu[i].stu_sex,stu[i].stu_id,stu[i].stu_password,stu[i].chinese_score,stu[i].math_score,stu[i].english_score,stu[i].stu_error);
+	}
+	fclose(fp);*/
 	return ;
 }
 //录入学生成绩
 void import_score()
 {
 	int i;
+	/*FILE* fp = fopen("student.txt","r+");
+	fscanf(fp,"%d",&student_count);
+	for(i=0;i<student_count;i++)
+	{
+		fscanf(fp,"%s %d %d %s %hd %hd %hd %hhd",stu[i].stu_name,&stu[i].stu_sex,&stu[i].stu_id,stu[i].stu_password,&stu[i].chinese_score,&stu[i].math_score,&stu[i].english_score,&stu[i].stu_error);
+	}*/
 	char names[20];
 	printf("请输入需要登记成绩的学生姓名或学号：");
 	scanf("%s",names);
@@ -239,32 +316,80 @@ void import_score()
 			scanf("%hd",&stu[i].english_score);
 		}
 	}
+/*	rewind(fp);
+	fprintf(fp,"%d\n",student_count);
+	for(i=0;i<student_count;i++)
+	{
+		fprintf(fp,"%s %d %d %s %hd %hd %hd %hhd\n",stu[i].stu_name,stu[i].stu_sex,stu[i].stu_id,stu[i].stu_password,stu[i].chinese_score,stu[i].math_score,stu[i].english_score,stu[i].stu_error);
+	}
+	fclose(fp);*/
+	return ;
 }
-//显示所有学生信息
+//显示在校/离校的学生信息
 void show_allstu()
 {
-// FILE* fp = fopen("student.txt","r")
+	int i;//,n=1;
 	//puts("1.在校");
 	//puts("2.辍学");
-	
-	for(int i=0;i<student_count;i++)
+	//printf("请输入：");
+	//scanf("%d",&n);
+	/*if(1==n)
 	{
-		printf("姓名：%s",stu[i].stu_name);
-		if(1==stu[i].stu_sex) printf("性别：男\n");
-		else if(2==stu[i].stu_sex) printf("性别：女\n");
-		printf("学号：%08d\n",stu[i].stu_id);
-		if(stu[i].chinese_score && stu[i].math_score && stu[i].english_score)
+		FILE* fp = fopen("student.txt","r");
+		
+		student_count=0;
+		for(int i=0;;i++)
 		{
-			printf("语文%hd数学%hd英语%hd\n",stu[i].chinese_score,stu[i].math_score,stu[i].english_score);	
+			fscanf(fp,"%s %d %d %s %hd %hd %hd %hhd",stu[i].stu_name,&stu[i].stu_sex,&stu[i].stu_id,stu[i].stu_password,&stu[i].chinese_score,&stu[i].math_score,&stu[i].english_score,&stu[i].stu_error);
+			if(stu[i].stu_sex==0) break;
+			else student_count++;
 		}
-		else printf("成绩信息未更新\n");
+		fclose(fp);
 	}
-		return ;
+	 */
+	/*else 
+	{
+		FILE* fpx = fopen("overlord.txt","r");
+		fscanf(fpx,"%d",&out);
+		for(i=0;i<out;i++)
+		{
+			fscanf(fpx,"%s %d %d %s %hd %hd %hd %hhd",stu[i].stu_name,&stu[i].stu_sex,&stu[i].stu_id,stu[i].stu_password,&stu[i].chinese_score,&stu[i].math_score,&stu[i].english_score,&stu[i].stu_error);
+		}
+		fclose(fpx);
+	}*/
+	for(i=0;i<student_count;i++)
+	{
+		if(stu[i].stu_sex)
+		{
+			printf("姓名：%s ",stu[i].stu_name);
+			if(1==stu[i].stu_sex) printf("性别：男\n");
+			else if(2==stu[i].stu_sex) printf("性别：女\n");
+			printf("学号：%08d\n",stu[i].stu_id);
+			if(stu[i].chinese_score && stu[i].math_score && stu[i].english_score)
+			{
+				printf("语文%hd数学%hd英语%hd\n",stu[i].chinese_score,stu[i].math_score,stu[i].english_score);	
+			}
+			else printf("成绩信息未更新\n");
+		}
+		else continue;
+	}
+	
+	stdin->_IO_read_ptr = stdin->_IO_read_end;
+	puts("任意键继续...");
+	getch();
+	return ;
+
 }
 //重置学生密码
 void reset_stupassword()
 {	
 	int i;
+	/*FILE* fp = fopen("student.txt","r+");
+	fscanf(fp,"%d",&student_count);
+	for(i=0;i<student_count;i++)
+	{
+		fscanf(fp,"%s %d %d %s %hd %hd %hd %hhd",stu[i].stu_name,&stu[i].stu_sex,&stu[i].stu_id,stu[i].stu_password,&stu[i].chinese_score,&stu[i].math_score,&stu[i].english_score,&stu[i].stu_error);
+	}*/
 	char names[20];
 	printf("请输入重置的学生姓名：");
 	scanf("%s",names);
@@ -278,37 +403,34 @@ void reset_stupassword()
 		}
 	}
 	printf("未能找到相关学生信息\n");
+/*	rewind(fp);
+	fprintf(fp,"%d\n",student_count);
+	for(i=0;i<student_count;i++)
+	{
+		fprintf(fp,"%s %d %d %s %hd %hd %hd %hhd\n",stu[i].stu_name,stu[i].stu_sex,stu[i].stu_id,stu[i].stu_password,stu[i].chinese_score,stu[i].math_score,stu[i].english_score,stu[i].stu_error);
+	}
+	fclose(fp);*/
 	return ;
 }
 void save_studata(void)
 {
-	FILE* save_stu = fopen("student.txt","w+");
+	FILE* save_stu = fopen("student.txt","w");
 	int i;
-	fprintf(save_stu,"%d\n",student_count);
-	
 	for(i=0;i<student_count;i++)
 	{
-		fprintf(save_stu,"%s %d %d %s|%hd %hd %hd|%hhd\n",stu[i].stu_name,stu[i].stu_sex,stu[i].stu_id,stu[i].stu_password,stu[i].chinese_score,stu[i].math_score,stu[i].english_score,stu[i].stu_error);
+		fprintf(save_stu,"%s %d %d %s %hd %hd %hd %hhd\n",stu[i].stu_name,stu[i].stu_sex,stu[i].stu_id,stu[i].stu_password,stu[i].chinese_score,stu[i].math_score,stu[i].english_score,stu[i].stu_error);
 	}
-	printf("保存完毕.");
-	fflush(stdout);
-	usleep(500000);
-	printf(".");
-	fflush(stdout);
-	usleep(500000);
-	printf(".");
-	fflush(stdout);
-	usleep(500000);
-	printf(".");
-	fflush(stdout);
-	usleep(500000);
-	printf(".");
-	fflush(stdout);
-	usleep(500000);
-	printf(".");
-	fflush(stdout);
-	usleep(500000);
-	printf("\n");
 	fclose(save_stu);
+	printf("保存完毕");
+	fflush(stdout);
+	usleep(200000);
+	for(int t=0;t<6;t++)
+	{
+		printf(".");
+		fflush(stdout);
+		usleep(300000);
+	}
+	printf("\n");
+
 	return ;
 }

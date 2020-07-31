@@ -1,8 +1,6 @@
 #ifndef TEACHER_TOOLS_H
 #define TEACHER_TOOLS_H
 
-#include <stdio.h>
-#include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
 //显示教师菜单
@@ -16,7 +14,7 @@ void del_stu(void);
 
 //查找学生信息
 void find_stu(void);
-
+void open_data();
 //修改学生信息
 void change_inf(void);
 

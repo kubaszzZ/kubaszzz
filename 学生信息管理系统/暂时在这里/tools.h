@@ -1,15 +1,23 @@
 #ifndef TOOLS_H
 #define TOOLS_H
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+#include <getch.h>
+#define Max 100//最大容量100
 #define MAX 100
-#define Max 100
 
-#include<time.h>
-#include<stdlib.h>
-#include<string.h>
-#include<getch.h>
-
-
-
+extern int student_count;//容量计数
+extern int out;
+struct Teacher
+{
+	char tea_name[20];
+	int tea_sex;
+	int tea_id;
+	char tea_password[13];
+	char tea_error;
+};
 
 struct Student
 {
@@ -23,31 +31,18 @@ struct Student
     char stu_error;
 };
 
-extern int student_count;
-extern int out;
-struct Teacher
-{
-	char tea_name[20];
-	int sex_tea;
-	int tea_id;
-	char tea_password[20];
-	char tea_error;
-};
-
 extern struct Student stu[Max];
 extern struct Teacher tea[Max];
 
 char leader_password[10];
-
 //强制修改密码
-void strong_change();
+void strong_change(void);
 
 //修改自己的密码
-void change_personpass();
+void change_personpass(void);
 
 //产生随机学号（1000-9999）
-int srand_num();
+int srand_num(void);
 
 //显示输入帐号密码的界面
-
 #endif// TOOLS_H
