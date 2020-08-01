@@ -58,11 +58,10 @@ void strong_change()
 				//tea[j].tea_error=0;
 				strcpy(tea[j].tea_password,"123");
 				tea[j].tea_error=0;
-				printf("--%d--\n", str_l);
 				printf("--%hhd--\n", tea[j].tea_error);
 				fseek(frotea,-str_l-1,1);
 				fprintf(frotea,"%s %d %3d %s %hhd\n", tea[j].tea_name, tea[j].tea_sex, tea[j].tea_id, tea[j].tea_password,tea[j].tea_error);//只改变error为0,%3d可以为ID的最大位数---错误次数(从fseek中减去位数)
-				//完全删除(未实现)					
+						
 				break;
 			}
 		}
@@ -101,7 +100,7 @@ void change_personpass()
 		FILE* fp=fopen("student.txt","w");
 		for(int k=0;k<student_count;k++)
 		{
-			fprintf(fp,"%s %d %d %s %hd %hd %hd\n",stu[k].stu_name,stu[k].stu_sex,stu[k].stu_id,stu[k].stu_password,stu[k].chinese_score,stu[k].math_score,stu[k].english_score);
+			fprintf(fp,"%s %d %d %s %hd %hd %hd %hhd\n",stu[k].stu_name,stu[k].stu_sex,stu[k].stu_id,stu[k].stu_password,stu[k].chinese_score,stu[k].math_score,stu[k].english_score,stu[k].stu_error);
 		}
 		fclose(fp);		
 	}

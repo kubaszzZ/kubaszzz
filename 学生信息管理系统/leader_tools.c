@@ -172,7 +172,7 @@ void del_tea()//用工号学号删除
 				fprintf(ftea,"%s %d %d %s\n", tea[i].tea_name, tea[i].tea_sex, tea[i].tea_id, tea[i].tea_password);
 				fclose(ftea);								
 				tea[i].tea_id=0;
-				//修改存在文件内容 已实现(被删除的教师会存在但是ID为0)			
+				//修改存在文件内容 			
 				
 				FILE *frotea=fopen("OLteacher.txt","r+");
 				if(NULL==frotea)//↑打开在线老师信息文件
@@ -193,11 +193,11 @@ void del_tea()//用工号学号删除
 						str_l+=strlen(tea[j].tea_password);
 						str_l+=sizeof(tea[j].tea_error);
 						//获取前几个参数的位数把文件指针指回要修改一行的开头
+						tea[j].tea_sex=0;
 						tea[j].tea_id=0;
-						printf("--%d--\n", str_l);
 						fseek(frotea,-str_l,1);
 						fprintf(frotea,"%s %d %d %s %hhd\n", tea[j].tea_name, tea[j].tea_sex, tea[j].tea_id, tea[j].tea_password,tea[j].tea_error);//只改变id为0,%3d可以为ID的最大位数---错误次数(从fseek中减去位数)
-						//完全删除(未实现)					
+											
 						break;
 					}
 				}
@@ -263,21 +263,6 @@ void show_dieteacher()
 
 void save_data()
 {
-	//如果同一个老师重复删除也会重复记录，(未实现(不一定要实现))
-	/*FILE* otea=fopen("OLteacher.txt","a");
-	if(NULL==otea)
-	{
-		printf("文件不存在");
-		return ;
-	}
-	for(int i=0;i<MAX;i++)
-	{
-		if(0!=tea[i].tea_id)
-		{
-		fprintf(otea,"%s %d %d %s\n",tea[i].tea_name,tea[i].tea_sex,tea[i].tea_id,tea[i].tea_password);	
-		}		
-	}		
-	fclose(otea);	*/
 	flag=0;//记录是否退出'校长系统用'
 }
 

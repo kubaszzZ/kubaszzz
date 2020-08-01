@@ -10,11 +10,16 @@ int main()
 	while(1)
 	{
 		if(!n)
-		{
-			puts("请选择登陆的身份：");
-			puts("1.student");
-			puts("2.teacher");
-			puts("3.leader");
+		{	
+			puts("┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓");
+			puts("┃欢迎使用中国计量大学教务在线┃");
+			puts("┣━━━━━━━━━━━━━━━━━━━━━━━━━━━━┫");
+			puts("┃      请选择您的身份       ┃");
+			puts("┣━━━━━━━━━━━━━━━━━━━━━━━━━━━━┫");
+			puts("┃1.学生                      ┃");
+			puts("┃2.教职工                    ┃");
+			puts("┃3.管理员                    ┃");
+			puts("┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛");
 			printf("请输入：");
 			scanf("%d",&n);
 		}
@@ -34,7 +39,7 @@ int main()
 		}
 		else if(2==n)
 		{
-			tea_link()
+			if(tea_on==0) tea_link();
 			if(tea_on==1)
 			{	
 				switch(tea_menu())
@@ -49,7 +54,11 @@ int main()
 					case 8:n=0;tea_on=0;save_studata();break;
 				}
 			}
-			
+			else if(tea_on==2)
+			{
+				n=0;
+				tea_on=0;
+			}					
 		}
 		else if(3==n)
 		{
@@ -61,12 +70,8 @@ int main()
 				case 4:del_tea();break;
 				case 5:show_onlineteacher();break;
 				case 6:show_dieteacher();break;
-				case 7:n=0;save_data();break;
+				case 7:n=0;open_data();save_data();break;
 			}
 		}
-		else if(4==n)
-		{
-			return 0;
-		}	
 	}
 }

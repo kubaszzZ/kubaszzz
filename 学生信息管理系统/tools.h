@@ -1,19 +1,22 @@
 #ifndef TOOLS_H
 #define TOOLS_H
+
 #define MAX 100
 #define Max 100
+
 #ifdef DEBUG
 	#define debug(...) printf(__VA_ARGS__)
 #else
 	#define debug(...)
 #endif
-#include<time.h>
+
 #include<stdlib.h>
 #include<string.h>
 #include<getch.h>
+#include<time.h>
 
-
-
+extern int student_count;
+extern int out;
 
 struct Student
 {
@@ -27,8 +30,6 @@ struct Student
     char stu_error;
 };
 
-extern int student_count;
-extern int out;
 struct Teacher
 {
 	char tea_name[20];

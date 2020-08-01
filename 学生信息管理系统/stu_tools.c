@@ -2,7 +2,6 @@
 #include "stu_tools.h"
 #include"tools.h"
 
-int wrong=0;
 char student_name[20];//学生姓名
 int flag_1=0;//０为未登录，１为登录
 int record=0;
@@ -11,27 +10,36 @@ void read_student()//读取学生信息
 	FILE* fp=fopen("student.txt","r+");	
 	for(int i=0;i<student_count;i++)
 	{
-  		fscanf(fp,"%s %d %d %s %hd %hd %hd",stu[i].stu_name,&stu[i].stu_sex,&stu[i].stu_id,stu[i].stu_password,&stu[i].chinese_score,&stu[i].math_score,&stu[i].english_score);
-  		//printf("%s %d %d %s %hd %hd %hd\n",stu[i].stu_name,stu[i].stu_sex,stu[i].stu_id,stu[i].stu_password,stu[i].chinese_score,stu[i].math_score,stu[i].english_score);
+  		fscanf(fp,"%s %d %d %s %hd %hd %hd %hhd",stu[i].stu_name,&stu[i].stu_sex,&stu[i].stu_id,stu[i].stu_password,&stu[i].chinese_score,&stu[i].math_score,&stu[i].english_score,&stu[i].stu_error);
+  		
 	}
 	fclose(fp);
 	return;
+}
+void write_student()//读取学生信息
+{
+	FILE* fp=fopen("student.txt","w");
+	for(int k=0;k<2;k++)
+	{
+		fprintf(fp,"%s %d %d %s %hd %hd %hd %hhd\n",stu[k].stu_name,stu[k].stu_sex,stu[k].stu_id,stu[k].stu_password,stu[k].chinese_score,stu[k].math_score,stu[k].english_score,stu[k].stu_error);
+	}
+	fclose(fp);
 }
 char stu_menu()//学生菜单
 {
 	int option=0;
 	system("clear");
-	puts("————————————————————————————————");
-	puts("｜   　　学生学籍管理　　　　 ｜");
-	puts("｜   	 1、登录　  　　　　 ｜");
-	puts("｜   	 ２、查询成绩　 　　　｜");
-	puts("｜       ３、修改密码　　　　 ｜");
-	puts("｜       ４、查看个人信息　　 ｜");
-	puts("｜       ５、退出　　　　　　 ｜");
-	puts("———————————————————————————————");
+	puts("┏━━━━━━━━━━━━━━━━━━━━━━━━━━┓");
+	puts("┃   　　学生学籍管理　　　 ┃");
+	puts("┣━━━━━━━━━━━━━━━━━━━━━━━━━━┫");
+	puts("┃    1、登录　  　　　　   ┃");
+	puts("┃    2、查询成绩　 　　  　┃");
+	puts("┃    3、修改密码　　　　   ┃");
+	puts("┃    4、查看个人信息　　   ┃");
+	puts("┃    5、退出　　　　　　   ┃");
+	puts("┗━━━━━━━━━━━━━━━━━━━━━━━━━━┛");
 	puts("请输入选项：");
 	scanf("%d",&option);
-	if(3<wrong) {printf("密码错误已达3次，联系教师");return 0;}
 	if(5==option) return option;
 	if(1==option&&0==flag_1) return option;
 	else if(1==option&&1==flag_1) {printf("已登录请勿重复登录\n"); return 0;}
@@ -46,28 +54,32 @@ char stu_menu()//学生菜单
 }
 
 void stu_online()//登录
-{
+{	
+	void read_student();
 	int cmp=0,num=0;
 	char student_password[10]={};
-	printf("请输入姓名、密码:");
-	scanf("%s %s",student_name,student_password);
+	printf("请输入姓名:");
+	scanf("%s",student_name);
 	for(int i=0;i<student_count;i++)
 	{
 		if(0==strcmp(stu[i].stu_name,student_name))
 		{
 			record=i;
-			//printf("%d",record);
+		
 			num=1;
 			break;
 		}
 		
 	}
+	if(2==stu[record].stu_error) {printf("密码输入错误已达３次，账号已锁定\n"); return ;}
+	printf("请输入密码:");
+	scanf("%s",student_password);
 	if(0==num) 
 	{
 		printf("学生不存在!\n");
 		return;
 	} 
-	while(3>wrong)
+	while(3>stu[record].stu_error)
 	{
 		if(0==strcmp(stu[record].stu_password,student_password))
 		{
@@ -77,30 +89,28 @@ void stu_online()//登录
 			{
 				printf("强制修改密码：\n");
 				change_personpass();
-				FILE* fp=fopen("student.txt","w");
-				for(int k=0;k<2;k++)
-				{
-					fprintf(fp,"%s %d %d %s %hd %hd %hd",stu[k].stu_name,stu[k].stu_sex,stu[k].stu_id,stu[k].stu_password,stu[k].chinese_score,stu[k].math_score,stu[k].english_score);
-				}
-				fclose(fp);
+				write_student();
 			}
-			wrong=0;
+			stu[record].stu_error=0;
+			write_student();
 			flag_1=1;
 			return;
 		}
 		else
 		{
 			printf("密码错误，重新输入：");
-			wrong++;
+			stu[record].stu_error++;
+			write_student();
 			scanf("%s",student_password);
 			fflush(stdin);
 		}
-		if(3==wrong) 
+		if(2==stu[record].stu_error) 
 		{
 			printf("密码输入错误已达３次，账号已锁定\n");  
 			return;
 		}
 	}
+	
 	return;
 }
 void find_score() //查看成绩

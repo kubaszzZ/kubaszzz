@@ -4,7 +4,6 @@
 #include <string.h>
 #include <unistd.h>
 
-
 extern int tea_on;
 
 //显示教师菜单
@@ -18,7 +17,7 @@ void del_stu(void);
 
 //查找学生信息
 void find_stu(void);
-void open_data();
+
 //修改学生信息
 void change_inf(void);
 
@@ -27,10 +26,17 @@ void import_score(void);
 
 //显示所有学生信息
 void show_allstu(void);
-
+void jiesuo(void);
 //重置学生密码
 void reset_stupassword(void);
 
+//读取文件
+void open_data(void);
+
+//保存文件
 void save_studata(void);
-char tea_link();
+
+//登录
+void tea_link(void);
+
 #endif// TEACHER_TOOLS_H
