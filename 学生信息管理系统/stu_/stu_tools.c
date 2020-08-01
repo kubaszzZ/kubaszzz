@@ -2,20 +2,28 @@
 #include "stu_tools.h"
 #include"tools.h"
 
-int wrong=0;
 char student_name[20];//学生姓名
 int flag_1=0;//０为未登录，１为登录
 int record=0;
 void read_student()//读取学生信息
 {
 	FILE* fp=fopen("student.txt","r+");	
-	for(int i=0;i<2;i++)
+	for(int i=0;i<student_count;i++)
 	{
-  		fscanf(fp,"%s %d %d %s %hd %hd %hd",stu[i].stu_name,&stu[i].stu_sex,&stu[i].stu_id,stu[i].stu_password,&stu[i].chinese_score,&stu[i].math_score,&stu[i].english_score);
+  		fscanf(fp,"%s %d %d %s %hd %hd %hd %hhd",stu[i].stu_name,&stu[i].stu_sex,&stu[i].stu_id,stu[i].stu_password,&stu[i].chinese_score,&stu[i].math_score,&stu[i].english_score,&stu[i].stu_error);
   		//printf("%s %d %d %s %hd %hd %hd\n",stu[i].stu_name,stu[i].stu_sex,stu[i].stu_id,stu[i].stu_password,stu[i].chinese_score,stu[i].math_score,stu[i].english_score);
 	}
 	fclose(fp);
 	return;
+}
+void write_student()//读取学生信息
+{
+	FILE* fp=fopen("student.txt","w");
+	for(int k=0;k<2;k++)
+	{
+		fprintf(fp,"%s %d %d %s %hd %hd %hd %hhd\n",stu[k].stu_name,stu[k].stu_sex,stu[k].stu_id,stu[k].stu_password,stu[k].chinese_score,stu[k].math_score,stu[k].english_score,stu[k].stu_error);
+	}
+	fclose(fp);
 }
 char stu_menu()//学生菜单
 {
@@ -23,7 +31,7 @@ char stu_menu()//学生菜单
 	system("clear");
 	puts("————————————————————————————————");
 	puts("｜   　　学生学籍管理　　　　 ｜");
-	puts("｜   	  1、登录　  　　　　 ｜");
+	puts("｜   	 1、登录　  　　　　 ｜");
 	puts("｜   	 ２、查询成绩　 　　　｜");
 	puts("｜       ３、修改密码　　　　 ｜");
 	puts("｜       ４、查看个人信息　　 ｜");
@@ -31,6 +39,7 @@ char stu_menu()//学生菜单
 	puts("———————————————————————————————");
 	puts("请输入选项：");
 	scanf("%d",&option);
+	//if(3==stu[record].stu_error) {printf("密码错误已达3次，联系教师");return 0;}
 	if(5==option) return option;
 	if(1==option&&0==flag_1) return option;
 	else if(1==option&&1==flag_1) {printf("已登录请勿重复登录\n"); return 0;}
@@ -48,25 +57,28 @@ void stu_online()//登录
 {
 	int cmp=0,num=0;
 	char student_password[10]={};
-	printf("请输入姓名、密码:");
-	scanf("%s %s",student_name,student_password);
-	for(int i=0;i<2;i++)
+	printf("请输入姓名:");
+	scanf("%s",student_name);
+	for(int i=0;i<student_count;i++)
 	{
 		if(0==strcmp(stu[i].stu_name,student_name))
 		{
 			record=i;
-			printf("%d",record);
+			//printf("%d",record);
 			num=1;
 			break;
 		}
 		
 	}
+	if(2==stu[record].stu_error) {printf("密码输入错误已达３次，账号已锁定\n"); return ;}
+	printf("请输入密码:");
+	scanf("%s",student_password);
 	if(0==num) 
 	{
 		printf("学生不存在!\n");
 		return;
 	} 
-	while(3>wrong)
+	while(3>stu[record].stu_error)
 	{
 		if(0==strcmp(stu[record].stu_password,student_password))
 		{
@@ -75,31 +87,41 @@ void stu_online()//登录
 			if(0==cmp)
 			{
 				printf("强制修改密码：\n");
-				strong_change();
+				change_personpass();
+				FILE* fp=fopen("student.txt","w");
+				for(int k=0;k<2;k++)
+				{
+					fprintf(fp,"%s %d %d %s %hd %hd %hd %hhd",stu[k].stu_name,stu[k].stu_sex,stu[k].stu_id,stu[k].stu_password,stu[k].chinese_score,stu[k].math_score,stu[k].english_score,stu[k].stu_error);
+				}
+				fclose(fp);
 			}
-			wrong=0;
+			stu[record].stu_error=0;
+			write_student();
 			flag_1=1;
 			return;
 		}
 		else
 		{
 			printf("密码错误，重新输入：");
-			wrong++;
-			scanf(" %s ",student_password);
+			stu[record].stu_error++;
+			write_student();
+			scanf("%s",student_password);
+			fflush(stdin);
 		}
-		if(3==wrong) 
+		if(2==stu[record].stu_error) 
 		{
 			printf("密码输入错误已达３次，账号已锁定\n");  
 			return;
 		}
 	}
+	//if(2==stu[record].stu_error) printf("密码输入错误已达３次，账号已锁定\n");
 	return;
 }
 void find_score() //查看成绩
 {
   	int max_chinese=0,min_chinese=100,max_eng=0,min_eng=100,max_math=0,min_math=100;
   	int sum_chinese=0,sum_eng=0,sum_math=0;
-	for(int i=0;i<2;i++)
+	for(int i=0;i<student_count;i++)
 	{
 		sum_chinese+=stu[i].chinese_score;
 		if(max_chinese<stu[i].chinese_score)
@@ -111,8 +133,8 @@ void find_score() //查看成绩
 			min_chinese	=stu[i].chinese_score;
 		}
 	}
-	printf("语文最高分：%hd 最低分：%hd 平均分：%f\n",max_chinese,min_chinese,(float)(sum_chinese/100));
-	for(int i=0;i<2;i++)
+	printf("语文最高分：%hd 最低分：%hd 平均分：%f\n",max_chinese,min_chinese,(float)(sum_chinese/student_count));
+	for(int i=0;i<student_count;i++)
 	{
 		sum_math+=stu[i].math_score;
 		if(max_math<stu[i].math_score)
@@ -124,8 +146,8 @@ void find_score() //查看成绩
 			min_math=stu[i].math_score;
 		}
 	}
-	printf("数学最高分：%hd 最低分：%hd　平均分： %f \n",max_math,min_math,(float)(sum_math/100));
-	for(int i=0;i<2;i++)
+	printf("数学最高分：%hd 最低分：%hd　平均分： %f \n",max_math,min_math,(float)(sum_math/student_count));
+	for(int i=0;i<student_count;i++)
 	{
 		sum_eng+=stu[i].english_score;
 		if(max_eng<stu[i].english_score)
@@ -137,18 +159,25 @@ void find_score() //查看成绩
 			min_eng=stu[i].english_score;
 		}
 	}
-	printf("英语最高分：%hd 最低分：%hd　平均分： %f\n",max_eng,min_eng,(float)(sum_eng/100));
+	printf("英语最高分：%hd 最低分：%hd　平均分： %f\n",max_eng,min_eng,(float)(sum_eng/student_count));
+	
+	stdin->_IO_read_ptr = stdin->_IO_read_end;
+	puts("任意键继续...");
+	getch();
 	return;
 }
 
 void watch_person()//查看个人信息
 {
-	for(int i=0;i<2;i++)
+	for(int i=0;i<student_count;i++)
 	{
 		if(0==strcmp(stu[record].stu_name,stu[i].stu_name))
 		{
 			printf("名字:%s\n性别:%d\n学号:%d\n密码:******\n语文成绩:%hd\n数学成绩:%hd\n英语成绩：%hd\n",stu[i].stu_name,stu[i].stu_sex,stu[i].stu_id,stu[i].chinese_score,stu[i].math_score,stu[i].english_score);
 		}
 	}
-	return;
-}
+		
+	stdin->_IO_read_ptr = stdin->_IO_read_end;
+	puts("任意键继续...");
+	getch();
+	return ;}
