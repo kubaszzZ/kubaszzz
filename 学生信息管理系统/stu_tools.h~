@@ -12,4 +12,5 @@ void find_score(); //查看成绩
 void watch_person();//查看个人信息
 
 
+
 #endif// STU_TOOLS_H

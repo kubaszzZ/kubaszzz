@@ -3,10 +3,11 @@
 
 struct Student stu[100];
 struct Teacher tea[100];
+
 int student_count=0;
 int out=0;
 
-//强制修改密码
+//重置密码
 void strong_change()
 {
 	int n=0;
@@ -97,6 +98,12 @@ void change_personpass()
 				break;
 			}
 		}
+		FILE* fp=fopen("student.txt","w");
+		for(int k=0;k<student_count;k++)
+		{
+			fprintf(fp,"%s %d %d %s %hd %hd %hd\n",stu[k].stu_name,stu[k].stu_sex,stu[k].stu_id,stu[k].stu_password,stu[k].chinese_score,stu[k].math_score,stu[k].english_score);
+		}
+		fclose(fp);		
 	}
 	if(2==n)
 	{

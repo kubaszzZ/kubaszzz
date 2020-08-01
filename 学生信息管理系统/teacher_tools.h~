@@ -3,6 +3,10 @@
 
 #include <string.h>
 #include <unistd.h>
+
+
+extern int tea_on;
+
 //显示教师菜单
 char tea_menu(void);
 
@@ -26,5 +30,7 @@ void show_allstu(void);
 
 //重置学生密码
 void reset_stupassword(void);
+
 void save_studata(void);
+char tea_link();
 #endif// TEACHER_TOOLS_H

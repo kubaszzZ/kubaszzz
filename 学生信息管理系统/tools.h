@@ -2,7 +2,11 @@
 #define TOOLS_H
 #define MAX 100
 #define Max 100
-
+#ifdef DEBUG
+	#define debug(...) printf(__VA_ARGS__)
+#else
+	#define debug(...)
+#endif
 #include<time.h>
 #include<stdlib.h>
 #include<string.h>
