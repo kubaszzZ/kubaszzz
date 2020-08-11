@@ -6,7 +6,7 @@
 #include "tools.h"
 
 void ccdl_mm();
-
+//-------------
 struct Teacher tea[100];
 int cnt=0;
 int flag=0;
