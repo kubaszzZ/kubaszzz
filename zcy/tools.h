@@ -15,11 +15,11 @@ struct Student
 
 struct Teacher
 {
-	char tea_name[20];
-	int sex_tea;
-	int tea_id;
-	char tea_password[20];
-	char tea_error;
+	char t_name[20];
+	int t_sex;
+	int t_id;
+	char t_password[20];
+	char t_error;
 };
 
 char leader_password[10];
