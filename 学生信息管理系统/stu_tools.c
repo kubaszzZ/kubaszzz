@@ -88,7 +88,7 @@ void stu_online()//登录
 			if(0==cmp)
 			{
 				printf("强制修改密码：\n");
-				change_personpass();
+				change_stu_personpass();
 				write_student();
 			}
 			stu[record].stu_error=0;

@@ -1,8 +1,9 @@
 #ifndef TEACHER_TOOLS_H
 #define TEACHER_TOOLS_H
 
-#include <string.h>
+#include <ctype.h>
 #include <unistd.h>
+#include <stdbool.h>
 
 extern int tea_on;
 
@@ -36,7 +37,8 @@ void open_data(void);
 //保存文件
 void save_studata(void);
 
-//登录
+//教师登录
 void tea_link(void);
 
+bool check_id(char* str);
 #endif// TEACHER_TOOLS_H

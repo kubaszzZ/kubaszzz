@@ -4,6 +4,7 @@
 // 显示校长菜单
 char leader_menu();
 
+void save_data();//新增 退出时保存数据到文件中
 
 //重置教师密码
 void reset_teapassword();
