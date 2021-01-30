@@ -5,7 +5,14 @@ using UnityEditor;
 
 public class GameManager : MonoBehaviour
 {
-    //private string m_Copyright = "PandadaStudio";
+    private float GameTime = 216; // 单局用时上限
+    private float GameTimer = 0; // 游戏计时器
+
+    public GameObject Shell;
+    public List<GameObject> ShellList = new List<GameObject>();
+
+    public bool IsStart = false; // 游戏是否开始
+    private bool isRepeatStart = true; // 是否开始创建Shell
 
     public static GameManager Instance
     {
@@ -20,29 +27,36 @@ public class GameManager : MonoBehaviour
 
     private void Update()
     {
-        // 全局控制
-        //foreach (KeyCode kcode in System.Enum.GetValues(typeof(KeyCode)))
-        //{
-        //    if (Input.GetKeyDown(kcode))
-        //    {
-        //        Debug.Log(kcode);
-        //    }
-        //}
-        //float x = Input.GetAxis("Horizontal_Left");
-        //if (x != 0)
-        //{
-        //    Debug.Log(x);
-        //}
+        if (IsStart)
+        {
+            GameTimer += Time.deltaTime;
+            
+            if (isRepeatStart)
+            {
+                InvokeRepeating("CreateShell", 0f, 4f);
+                isRepeatStart = false;
+            }
+
+            if (GameTimer > GameTime)
+            {
+                // TODO 游戏结束
+
+            }
+        }
     }
 
-    private void OnGUI()
+    private void CreateShell()
     {
-        foreach (KeyCode kcode in System.Enum.GetValues(typeof(KeyCode)))
+        ShellList.Clear();
+
+        // TODO +-
+        for (int i = 0; i < 5; ++i)
         {
-            if (Input.GetKeyDown(kcode))
-            {
-                GUI.Label(new Rect(10, 10, 100, 100), kcode.ToString());
-            }
+            float x = Random.Range(4f, 6f);
+            float y = Random.Range(1f, 3f);
+            GameObject go = Instantiate(Shell, new Vector3(x, y, 0), Quaternion.identity);
+            go.transform.parent = gameObject.transform;
+            ShellList.Add(go);
         }
     }
 }

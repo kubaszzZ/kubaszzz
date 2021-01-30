@@ -4,5 +4,5 @@ using UnityEngine;
 
 public class CrabD : CrabMono
 {
-
+    public int CrabID = 4;
 }
