@@ -636,7 +636,7 @@ MonoBehaviour:
   Score: 0
   ShellWeight: 0
   CrabWeight: 0
-  Level: 3
+  Level: 2
   IsDead: 0
   HasShell: 0
   ShellSpeed: 12

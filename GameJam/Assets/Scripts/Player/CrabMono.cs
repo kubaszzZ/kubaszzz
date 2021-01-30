@@ -75,8 +75,6 @@ public class CrabMono : MonoBehaviour
                 //AudioSource.PlayClipAtPoint(AudioManager.AudioClipsDic["Coin"], transform.position);
                 CrabWeight += collision.gameObject.GetComponent<Nutrition>().Nutri;
                 Destroy(collision.gameObject);
-
-                Debug.Log(CrabWeight);
                 break;
         }
     }
