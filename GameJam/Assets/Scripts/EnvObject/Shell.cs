@@ -1,12 +1,12 @@
 ﻿using Sirenix.OdinInspector;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Shell : MonoBehaviour
 {
     //[LabelText("壳等级")]
-    [HideInInspector] public int Level = 1;
-
-    public void CollisionStay2D(Collision2D collision)
+    [HideInInspector] public int Level = 1; 
+    public void CollisionEnter2D(Collision2D collision)
     {
         switch (collision.gameObject.tag)
         {
@@ -16,15 +16,21 @@ public class Shell : MonoBehaviour
                     if (Input.GetKeyDown(KeyCode.J))
                     {
                         // TODO 判断能否拾取
-                        //if ()
+                        if (Level - collision.gameObject.GetComponent<CrabA>().Level == 1)
                         {
-                            collision.gameObject.GetComponent<CrabA>().Level = Level;
+                            collision.gameObject.GetComponent<CrabA>().Level = Level;                                                  collision.gameObject.GetComponent<CrabA>().imgSuccess.SetActive(true);
+                            collision.gameObject.GetComponent<CrabA>().isSuccOpen = true;
+                        }
+                        else
+                        {
+                            collision.gameObject.GetComponent<CrabA>().imgError.SetActive(true);
+                            collision.gameObject.GetComponent<CrabA>().isErrOpen = true;
+
                         }
                         // TODO 交换壳的动画
                         //GameObject go = collision.gameObject.transform.GetChild(0).gameObject;
                         //go.GetComponent<SpriteRenderer>().sprite = Sprite;
                         //go.transform.position = transform.parent.transform.position;
-                        //collision.gameObject<GetComponent><CrabA>().IsChangeShell = true;
                     }
                 }
                 break;
@@ -34,9 +40,16 @@ public class Shell : MonoBehaviour
                     if (Input.GetKeyDown(KeyCode.KeypadEnter))
                     {
                         // TODO 判断能否拾取
-                        //if ()
+                        if (Level - collision.gameObject.GetComponent<CrabB>().Level == 1)
                         {
-                            collision.gameObject.GetComponent<CrabA>().Level = Level;
+                            collision.gameObject.GetComponent<CrabB>().Level = Level;
+                            collision.gameObject.GetComponent<CrabB>().imgSuccess.SetActive(true);
+                            collision.gameObject.GetComponent<CrabB>().isSuccOpen = true;
+                        }
+                        else
+                        {
+                            collision.gameObject.GetComponent<CrabB>().imgError.SetActive(true);
+                            collision.gameObject.GetComponent<CrabB>().isErrOpen = true;
                         }
                         // TODO 交换壳的动画
                         //GameObject go = collision.gameObject.transform.GetChild(0).gameObject;
@@ -67,4 +80,5 @@ public class Shell : MonoBehaviour
                 break;
         }
     }
+    
 }

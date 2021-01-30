@@ -9,13 +9,34 @@ public class CrabA : CrabMono
     private bool m_IsCrabCCollision = false;
     private bool m_IsCrabDCollision = false;
 
+    public bool isErrOpen = false;
+    public bool isSuccOpen = false;
+    public GameObject imgError;
+    public GameObject imgSuccess;
     [HideInInspector] public int CrabID = 1;
 
     private void Update()
     {
-
+        if (imgError.activeSelf && isErrOpen)
+        {
+            Invoke("setErrVis", 2.0f);
+            isErrOpen = false;
+        }
+        if (imgSuccess.activeSelf && isSuccOpen)
+        {
+            Invoke("setSuccVis", 2.0f);
+            isErrOpen = false;
+        }
     }
 
+    private void setErrVis()
+    {
+        imgError.SetActive(false);
+    }
+    private void setSuccVis()
+    {
+        imgSuccess.SetActive(false);
+    }
     protected override void FixedUpdate()
     {
         float x = 0, y = 0;
@@ -42,10 +63,40 @@ public class CrabA : CrabMono
         Debug.Log(m_rigid.velocity);
     }
 
-    protected override void OnCollisionEnter2D(Collision2D collision)
-    {
-        base.OnCollisionEnter2D(collision);
+    //protected override void OnCollisionEnter2D(Collision2D collision)
+    //{
+    //    base.OnCollisionEnter2D(collision);
 
+    //    switch (collision.gameObject.tag)
+    //    {
+    //        case Tag.CrabB:
+    //            if (!m_IsCrabBCollision)
+    //            {
+    //                HinderSpeed += DataManager.Instance.HinderSpeed[(collision.gameObject.GetComponent<CrabB>().Level - 1) * 5 + Level - 1];
+    //                m_IsCrabBCollision = true;
+    //            }
+    //            break;
+
+    //        case Tag.CrabC:
+    //            if (!m_IsCrabCCollision)
+    //            {
+    //                HinderSpeed += DataManager.Instance.HinderSpeed[(collision.gameObject.GetComponent<CrabC>().Level - 1) * 5 + Level - 1];
+    //                m_IsCrabCCollision = true;
+    //            }
+    //            break;
+
+    //        case Tag.CrabD:
+    //            if (!m_IsCrabDCollision)
+    //            {
+    //                HinderSpeed += DataManager.Instance.HinderSpeed[(collision.gameObject.GetComponent<CrabD>().Level - 1) * 5 + Level - 1];
+    //                m_IsCrabDCollision = true;
+    //            }
+    //            break;
+    //    }
+    //}
+
+    private void OnCollisionStay2D(Collision2D collision)
+    {
         switch (collision.gameObject.tag)
         {
             case Tag.CrabB:
